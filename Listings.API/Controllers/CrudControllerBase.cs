@@ -84,6 +84,29 @@ namespace Listings.API.Controllers
             return Ok(updatedEntity);
         }
 
+        //[HttpPatch("{id}")]
+        //public virtual async Task<IActionResult> Patch(TKey id, [FromQuery] string name)
+        //{
+            
+        //    TModel? recordToUpdate;
+
+        //    try
+        //    {
+        //        recordToUpdate = await _genericCrudService.GetByIdAsync(id);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+
+        //    if (recordToUpdate == null)
+        //        return NotFound();
+
+            
+
+        //    return Ok(recordToUpdate);
+        //}
+
         protected virtual async Task<bool> RecordExists(TKey id)
         {
             return (await _genericCrudService.GetByIdAsync(id)) != null;
