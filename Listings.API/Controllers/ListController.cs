@@ -14,6 +14,8 @@ namespace Listings.API.Controllers
         [HttpPatch("{id}")]
         public virtual async Task<IActionResult> Patch(int id, [FromQuery] string name)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             ListRecord? recordToUpdate;
 

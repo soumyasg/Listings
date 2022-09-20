@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add application services
 builder.Services.AddSingleton<IRepository<ListRecord, int>, ListingsRepository>();
 builder.Services.AddScoped(typeof(IGenericCrudService<,>), typeof(GenericCrudService<,>));
 

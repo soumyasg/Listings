@@ -1,8 +1,5 @@
 ﻿using Listings.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Linq.Expressions;
 
 namespace Listings.API.Controllers
 {
@@ -56,6 +53,8 @@ namespace Listings.API.Controllers
         [HttpPost]
         public virtual async Task<ActionResult<TModel>> Post(TModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var newModel = await _genericCrudService.AddAsync(model);
 
@@ -69,6 +68,9 @@ namespace Listings.API.Controllers
             {
                 return BadRequest();
             }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             TModel? updatedEntity;
 
@@ -84,34 +86,13 @@ namespace Listings.API.Controllers
             return Ok(updatedEntity);
         }
 
-        //[HttpPatch("{id}")]
-        //public virtual async Task<IActionResult> Patch(TKey id, [FromQuery] string name)
-        //{
-            
-        //    TModel? recordToUpdate;
-
-        //    try
-        //    {
-        //        recordToUpdate = await _genericCrudService.GetByIdAsync(id);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-
-        //    if (recordToUpdate == null)
-        //        return NotFound();
-
-            
-
-        //    return Ok(recordToUpdate);
-        //}
-
         protected virtual async Task<bool> RecordExists(TKey id)
         {
             return (await _genericCrudService.GetByIdAsync(id)) != null;
         }
 
+        // This is a hacky way to get the Id. In a real life app, we would make TModel implement an interface that
+        // will guarantee that TModel will always have an Id property.
         private TKey GetId(TModel model)
         {
             var idProp = model.GetType().GetProperty("Id");

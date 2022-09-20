@@ -1,69 +1,66 @@
-﻿using Listings.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using System.Collections.Concurrent;
+using Listings.Models;
 
 namespace Listings.Data
 {
     public class ListingsRepository : IRepository<ListRecord, int>
     {
+        // Making this thread-safe because this is a singleton service
+        protected static ConcurrentDictionary<int, ListRecord> ListRecords = new();
         static ListingsRepository()
         {
             Enumerable.Range(1, 10)
                     .ToList()
                     .ForEach(x =>
                     {
-                        ListRecords.Add(new ListRecord
+                        ListRecords.TryAdd(x, new ListRecord
                         {
                             Id= x,
                             Name = $"Item {x}"
                         });
                     });
         }
-        protected static List<ListRecord> ListRecords = new();
         public Task<ListRecord> AddAsync(ListRecord entity)
         {
-            // ignore the id that came with the request and assign one
+            // Ignore the id that came with the request and assign one
             // in real life apps, we'll probably be working with a DTO that won't have the Id property
-            var newId = ListRecords.Select(x => x.Id).Last() + 1;
+            var newId = ListRecords.Select(x => x.Key).Last() + 1;
             var newRecord = new ListRecord
             {
                 Id = newId,
                 Name = entity.Name
             };
-            ListRecords.Add(newRecord);
+            ListRecords.TryAdd(newId, newRecord);
 
             return Task.FromResult(newRecord);
         }
         public Task DeleteAsync(int id)
         {
-            var recordToDelete = ListRecords.FirstOrDefault(x => x.Id == id);
+            var recordToDelete = ListRecords.FirstOrDefault(x => x.Key == id).Value;
 
             if (recordToDelete == null)
                 throw new Exception("Item not found");
 
-            ListRecords.Remove(recordToDelete);
+            ListRecords.Remove(id, out var deletedRecord);
 
             return Task.CompletedTask;
         }
 
         public Task<List<ListRecord>> GetAllAsync(Expression<Func<ListRecord, bool>>? filterExpression = null, Expression<Func<IQueryable<ListRecord>, IOrderedQueryable<ListRecord>>>? sortExpression = null, List<string>? includes = null)
         {
-            return Task.FromResult(ListRecords);
+            return Task.FromResult(ListRecords.Select(x => x.Value).ToList());
         }
 
         public Task<ListRecord?> GetByIdAsync(int id)
         {
-            var record = ListRecords.FirstOrDefault(x => x.Id == id);
+            var record = ListRecords.FirstOrDefault(x => x.Key == id).Value;
             return Task.FromResult(record);
         }
 
         public Task<ListRecord> Update(ListRecord entity)
         {
-            var record = ListRecords.FirstOrDefault(x => x.Id == entity.Id);
+            var record = ListRecords.FirstOrDefault(x => x.Key == entity.Id).Value;
 
             if (record == null)
                 throw new Exception("Item not found");
