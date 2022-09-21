@@ -96,8 +96,8 @@ namespace Listings.API.Controllers
         private TKey GetId(TModel model)
         {
             var idProp = model.GetType().GetProperty("Id");
-            var idValue = idProp.GetValue(model, null);
-            return (TKey) idValue;
+            var idValue = idProp?.GetValue(model, null);
+            return idValue != null ? (TKey) idValue : default;
         }
     }
 }

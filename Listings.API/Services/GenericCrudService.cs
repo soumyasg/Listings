@@ -29,7 +29,7 @@ namespace Listings.API.Services
 
         }
 
-        public virtual async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filterExpression = null, Expression<Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>> sortExpression = null, List<string> includes = null)
+        public virtual async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filterExpression = null, Expression<Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>>? sortExpression = null, List<string>? includes = null)
         {
             return await _repository.GetAllAsync(filterExpression, sortExpression, includes);
         }
@@ -45,7 +45,7 @@ namespace Listings.API.Services
 
         public virtual async Task<TEntity?> UpdateAsync(TEntity entity)
         {
-            TEntity updatedEntity = null;
+            TEntity? updatedEntity = null;
 
             try
             {
