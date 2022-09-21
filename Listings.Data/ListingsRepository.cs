@@ -55,7 +55,7 @@ namespace Listings.Data
         public Task<ListRecord?> GetByIdAsync(int id)
         {
             var record = ListRecords.FirstOrDefault(x => x.Key == id).Value;
-            return Task.FromResult(record);
+            return Task.FromResult(record ?? default);
         }
 
         public Task<ListRecord> Update(ListRecord entity)
