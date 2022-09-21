@@ -42,22 +42,19 @@ namespace Listings.Data
             if (recordToDelete == null)
                 throw new Exception("Item not found");
 
-            ListRecords.Remove(id, out var deletedRecord);
+            ListRecords.TryRemove(id, out var deletedRecord);
 
             return Task.CompletedTask;
         }
-
         public Task<List<ListRecord>> GetAllAsync(Expression<Func<ListRecord, bool>>? filterExpression = null, Expression<Func<IQueryable<ListRecord>, IOrderedQueryable<ListRecord>>>? sortExpression = null, List<string>? includes = null)
         {
             return Task.FromResult(ListRecords.Select(x => x.Value).ToList());
         }
-
         public Task<ListRecord?> GetByIdAsync(int id)
         {
             var record = ListRecords.FirstOrDefault(x => x.Key == id).Value;
             return Task.FromResult(record ?? default);
         }
-
         public Task<ListRecord> Update(ListRecord entity)
         {
             var record = ListRecords.FirstOrDefault(x => x.Key == entity.Id).Value;
