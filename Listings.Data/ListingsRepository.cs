@@ -25,7 +25,7 @@ namespace Listings.Data
         {
             // Ignore the id that came with the request and assign one
             // in real life apps, we'll probably be working with a DTO that won't have the Id property
-            var newId = ListRecords.Select(x => x.Key).Last() + 1;
+            var newId = ListRecords.Select(x => x.Key).Max() + 1;
             var newRecord = new ListRecord
             {
                 Id = newId,
