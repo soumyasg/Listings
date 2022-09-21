@@ -31,7 +31,9 @@ namespace Listings.Data
                 Id = newId,
                 Name = entity.Name
             };
-            ListRecords.TryAdd(newId, newRecord);
+
+            if(!ListRecords.TryAdd(newId, newRecord))
+                throw new Exception("Failed to add record");
 
             return Task.FromResult(newRecord);
         }
@@ -42,7 +44,8 @@ namespace Listings.Data
             if (recordToDelete == null)
                 throw new Exception("Item not found");
 
-            ListRecords.TryRemove(id, out var deletedRecord);
+            if(!ListRecords.TryRemove(id, out var deletedRecord))
+                throw new Exception("Failed to delete record");
 
             return Task.CompletedTask;
         }
