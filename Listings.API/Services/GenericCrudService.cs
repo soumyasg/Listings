@@ -49,7 +49,7 @@ namespace Listings.API.Services
 
             try
             {
-                await _repository.Update(entity);
+                updatedEntity = await _repository.Update(entity);
             }
             catch (Exception)
             {
