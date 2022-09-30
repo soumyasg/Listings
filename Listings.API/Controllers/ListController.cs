@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Listings.Models;
 using Listings.Business;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Listings.API.Controllers
 {
