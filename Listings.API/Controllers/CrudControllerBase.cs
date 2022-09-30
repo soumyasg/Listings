@@ -1,11 +1,12 @@
 ﻿using Listings.API.Services;
+using Listings.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Listings.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CrudControllerBase<TModel, TKey> : ControllerBase where TModel : class where TKey : struct
+    public class CrudControllerBase<TModel, TKey> : ControllerBase where TModel : class, IModelRecord<TKey>, new() where TKey : struct
     {
 
         protected readonly ILogger<CrudControllerBase<TModel, TKey>> _logger;
@@ -58,13 +59,13 @@ namespace Listings.API.Controllers
 
             var newModel = await _genericCrudService.AddAsync(model);
 
-            return CreatedAtAction(nameof(Get), new { id = GetId(newModel) }, newModel);
+            return CreatedAtAction(nameof(Get), new { id = newModel.Id }, newModel);
         }
 
         [HttpPut("{id}")]
         public virtual async Task<IActionResult> Put(TKey id, TModel model)
         {
-            if (!id.Equals(GetId(model)))
+            if (!id.Equals(model.Id))
             {
                 return BadRequest();
             }
@@ -91,13 +92,5 @@ namespace Listings.API.Controllers
             return (await _genericCrudService.GetByIdAsync(id)) != null;
         }
 
-        // This is a hacky way to get the Id. In a real life app, we would make TModel implement an interface that
-        // will guarantee that TModel will always have an Id property.
-        private TKey GetId(TModel model)
-        {
-            var idProp = model.GetType().GetProperty("Id");
-            var idValue = idProp?.GetValue(model, null);
-            return idValue != null ? (TKey) idValue : default;
-        }
     }
 }
