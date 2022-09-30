@@ -1,7 +1,7 @@
 ﻿using Listings.Models;
 using System.Linq.Expressions;
 
-namespace Listings.API.Services
+namespace Listings.Business
 {
     public interface IGenericCrudService<TEntity, TKey> where TEntity : class, IModelRecord<TKey>, new()
     {
@@ -10,7 +10,7 @@ namespace Listings.API.Services
             Expression<Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>>? sortExpression = null,
             List<string>? includes = null
             );
-        
+
         Task DeleteAsync(TKey id);
         Task<TEntity?> GetByIdAsync(TKey id);
         Task<TEntity> AddAsync(TEntity entity);

@@ -1,6 +1,6 @@
 using Listings.Data;
 using Listings.Models;
-using Listings.API.Services;
+using Listings.Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
