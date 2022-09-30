@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Listings.Business\Listings.Business.csproj" />
-    <ProjectReference Include="..\Listings.Data\Listings.Data.csproj" />
     <ProjectReference Include="..\Listings.Models\Listings.Models.csproj" />
   </ItemGroup>
 
