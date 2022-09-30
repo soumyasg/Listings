@@ -2,7 +2,7 @@
 
 namespace Listings.Models
 {
-    public class ListRecord
+    public record class ListRecord : IModelRecord<int>
     {
         [Key]
         public int Id { get; set; }

@@ -1,9 +1,10 @@
 ﻿using Listings.Data;
+using Listings.Models;
 using System.Linq.Expressions;
 
 namespace Listings.API.Services
 {
-    public class GenericCrudService<TEntity, TKey> : IGenericCrudService<TEntity, TKey> where TEntity : class
+    public class GenericCrudService<TEntity, TKey> : IGenericCrudService<TEntity, TKey> where TEntity : class, IModelRecord<TKey>, new()
     {
         protected readonly ILogger<GenericCrudService<TEntity, TKey>> _logger;
         protected readonly IRepository<TEntity, TKey> _repository;
@@ -22,6 +23,13 @@ namespace Listings.API.Services
 
 
         }
+        public async Task<TEntity> AddAsync(TEntity entity, Func<TKey> keyProvider)
+        {
+            var newEntity = await _repository.AddAsync(entity, keyProvider);
+
+            return newEntity;
+        }
+
 
         public virtual async Task DeleteAsync(TKey id)
         {
