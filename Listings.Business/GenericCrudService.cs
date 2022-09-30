@@ -1,8 +1,9 @@
 ﻿using Listings.Data;
 using Listings.Models;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace Listings.API.Services
+namespace Listings.Business
 {
     public class GenericCrudService<TEntity, TKey> : IGenericCrudService<TEntity, TKey> where TEntity : class, IModelRecord<TKey>, new()
     {
